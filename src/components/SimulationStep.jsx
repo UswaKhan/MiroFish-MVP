@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { TWITTER_POSTS, REDDIT_POSTS } from '../data';
 
 function Post({ post }) {
-  const colors = { positive:'text-[#10b981]', negative:'text-[#ef4444]', neutral:'text-amber-400' };
-  const time = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  const colors = { positive: 'text-[#10b981]', negative: 'text-[#ef4444]', neutral: 'text-amber-400' };
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   return (
     <div className="bg-[#161a24] border border-[#1e2535] rounded-xl p-3 animate-slideIn text-sm">
       <div className={`font-bold text-xs mb-1.5 flex justify-between ${colors[post.sentiment]}`}>
@@ -16,18 +16,18 @@ function Post({ post }) {
 }
 
 export default function SimulationStep({ onNext }) {
-  const [round, setRound]               = useState(0);
-  const [posts, setPosts]               = useState(0);
+  const [round, setRound] = useState(0);
+  const [posts, setPosts] = useState(0);
   const [interactions, setInteractions] = useState(0);
-  const [sentiment, setSentiment]       = useState('—');
-  const [twitterFeed, setTwitterFeed]   = useState([]);
-  const [redditFeed, setRedditFeed]     = useState([]);
-  const [done, setDone]                 = useState(false);
-  const [finishing, setFinishing]       = useState(false);
-  const [activeTab, setActiveTab]       = useState('twitter');
+  const [sentiment, setSentiment] = useState('—');
+  const [twitterFeed, setTwitterFeed] = useState([]);
+  const [redditFeed, setRedditFeed] = useState([]);
+  const [done, setDone] = useState(false);
+  const [finishing, setFinishing] = useState(false);
+  const [activeTab, setActiveTab] = useState('twitter');
 
-  const tRef  = useRef();
-  const rRef  = useRef();
+  const tRef = useRef();
+  const rRef = useRef();
   const tiRef = useRef(0);
   const riRef = useRef(0);
 
@@ -66,7 +66,7 @@ export default function SimulationStep({ onNext }) {
         <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">
           Step 03 — Simulation Running
         </span>
-        <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>
+        <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{ fontFamily: 'Syne,sans-serif' }}>
           Live Simulation Feed
         </h2>
         <p className="text-[#6b7494] text-sm">120 agents interacting across Twitter and Reddit in parallel.</p>
@@ -81,9 +81,9 @@ export default function SimulationStep({ onNext }) {
       {/* Stats — always 3 cols but compact on mobile */}
       <div className="grid grid-cols-3 gap-2 md:gap-4 mb-5">
         {[
-          {icon:'💬', val:posts,        label:'Posts'},
-          {icon:'🔁', val:interactions, label:'Interactions'},
-          {icon:'📈', val:sentiment,    label:'Sentiment'},
+          { icon: '💬', val: posts, label: 'Posts' },
+          { icon: '🔁', val: interactions, label: 'Interactions' },
+          { icon: '📈', val: sentiment, label: 'Sentiment' },
         ].map(s => (
           <div key={s.label} className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-3 md:p-4 flex flex-col md:flex-row items-center md:items-center gap-1 md:gap-4 text-center md:text-left">
             <span className="text-xl md:text-2xl">{s.icon}</span>
@@ -115,7 +115,7 @@ export default function SimulationStep({ onNext }) {
       <div className="md:hidden">
         <div className="bg-[#0f1117] border border-[#1e2535] rounded-2xl overflow-hidden">
           <div ref={activeTab === 'twitter' ? tRef : rRef}
-               className="h-64 overflow-y-auto p-3 flex flex-col gap-2">
+            className="h-64 overflow-y-auto p-3 flex flex-col gap-2">
             {(activeTab === 'twitter' ? twitterFeed : redditFeed)
               .filter(p => p && p.sentiment)
               .map((p, i) => <Post key={i} post={p} />)
@@ -127,9 +127,9 @@ export default function SimulationStep({ onNext }) {
       {/* Desktop — side by side feeds */}
       <div className="hidden md:grid grid-cols-2 gap-4">
         {[
-          {label:'🐦 Twitter Feed', feed:twitterFeed, ref:tRef},
-          {label:'💬 Reddit Feed',  feed:redditFeed,  ref:rRef},
-        ].map(({label, feed, ref}) => (
+          { label: '🐦 Twitter Feed', feed: twitterFeed, ref: tRef },
+          { label: '💬 Reddit Feed', feed: redditFeed, ref: rRef },
+        ].map(({ label, feed, ref }) => (
           <div key={label} className="bg-[#0f1117] border border-[#1e2535] rounded-2xl overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 border-b border-[#1e2535] font-mono text-xs">
               <span>{label}</span>
@@ -143,11 +143,11 @@ export default function SimulationStep({ onNext }) {
       </div>
 
       {/* Button */}
-      <div className="mt-5">
+      <div className="mt-5 flex justify-end">
         <button
           onClick={() => { setFinishing(true); setTimeout(onNext, 1400); }}
           disabled={!done || finishing}
-          className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
+          className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
         >
           {finishing && <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin2 inline-block" />}
           {finishing ? 'Generating…' : 'Generate Report →'}
