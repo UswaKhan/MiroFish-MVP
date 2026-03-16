@@ -147,7 +147,7 @@ export default function SimulationStep({ onNext }) {
         <button
           onClick={() => { setFinishing(true); setTimeout(onNext, 1400); }}
           disabled={!done || finishing}
-          className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
+          className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
         >
           {finishing && <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin2 inline-block" />}
           {finishing ? 'Generating…' : 'Generate Report →'}
