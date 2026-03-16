@@ -99,7 +99,7 @@ export default function ReportStep({ onNext }) {
 
       <div className="mt-6 flex justify-end">
         <button onClick={onNext}
-          className="w-full md:w-auto px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
+          className="px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
           Continue → Deep Interaction
         </button>
       </div>
