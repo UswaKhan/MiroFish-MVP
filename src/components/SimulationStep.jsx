@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { MessageSquare, Repeat2, TrendingUp, Twitter } from 'lucide-react';
 import { TWITTER_POSTS, REDDIT_POSTS } from '../data';
 
 function Post({ post }) {
-  const colors = { positive: 'text-[#10b981]', negative: 'text-[#ef4444]', neutral: 'text-amber-400' };
-  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const colors = { positive:'text-[#10b981]', negative:'text-[#ef4444]', neutral:'text-amber-400' };
+  const time = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
   return (
     <div className="bg-[#161a24] border border-[#1e2535] rounded-xl p-3 animate-slideIn text-sm">
       <div className={`font-bold text-xs mb-1.5 flex justify-between ${colors[post.sentiment]}`}>
@@ -16,18 +17,18 @@ function Post({ post }) {
 }
 
 export default function SimulationStep({ onNext }) {
-  const [round, setRound] = useState(0);
-  const [posts, setPosts] = useState(0);
+  const [round, setRound]               = useState(0);
+  const [posts, setPosts]               = useState(0);
   const [interactions, setInteractions] = useState(0);
-  const [sentiment, setSentiment] = useState('—');
-  const [twitterFeed, setTwitterFeed] = useState([]);
-  const [redditFeed, setRedditFeed] = useState([]);
-  const [done, setDone] = useState(false);
-  const [finishing, setFinishing] = useState(false);
-  const [activeTab, setActiveTab] = useState('twitter');
+  const [sentiment, setSentiment]       = useState('—');
+  const [twitterFeed, setTwitterFeed]   = useState([]);
+  const [redditFeed, setRedditFeed]     = useState([]);
+  const [done, setDone]                 = useState(false);
+  const [finishing, setFinishing]       = useState(false);
+  const [activeTab, setActiveTab]       = useState('twitter');
 
-  const tRef = useRef();
-  const rRef = useRef();
+  const tRef  = useRef();
+  const rRef  = useRef();
   const tiRef = useRef(0);
   const riRef = useRef(0);
 
@@ -66,7 +67,8 @@ export default function SimulationStep({ onNext }) {
         <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">
           Step 03 — Simulation Running
         </span>
-        <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{ fontFamily: 'Syne,sans-serif' }}>
+        <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2"
+            style={{ fontFamily:'Syne,sans-serif' }}>
           Live Simulation Feed
         </h2>
         <p className="text-[#6b7494] text-sm">120 agents interacting across Twitter and Reddit in parallel.</p>
@@ -78,15 +80,15 @@ export default function SimulationStep({ onNext }) {
         </div>
       </div>
 
-      {/* Stats — always 3 cols but compact on mobile */}
+      {/* Stats */}
       <div className="grid grid-cols-3 gap-2 md:gap-4 mb-5">
         {[
-          { icon: '💬', val: posts, label: 'Posts' },
-          { icon: '🔁', val: interactions, label: 'Interactions' },
-          { icon: '📈', val: sentiment, label: 'Sentiment' },
+          { icon: <MessageSquare size={20} color="#00e5ff" />, val:posts,        label:'Posts'        },
+          { icon: <Repeat2       size={20} color="#00e5ff" />, val:interactions, label:'Interactions' },
+          { icon: <TrendingUp    size={20} color="#00e5ff" />, val:sentiment,    label:'Sentiment'    },
         ].map(s => (
-          <div key={s.label} className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-3 md:p-4 flex flex-col md:flex-row items-center md:items-center gap-1 md:gap-4 text-center md:text-left">
-            <span className="text-xl md:text-2xl">{s.icon}</span>
+          <div key={s.label} className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-3 md:p-4 flex flex-col md:flex-row items-center gap-1 md:gap-4 text-center md:text-left">
+            {s.icon}
             <div>
               <div className="font-mono font-extrabold text-base md:text-xl text-[#e8eaf0]">{s.val}</div>
               <div className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-[#6b7494]">{s.label}</div>
@@ -97,25 +99,23 @@ export default function SimulationStep({ onNext }) {
 
       {/* Mobile tab switcher */}
       <div className="flex md:hidden gap-2 mb-3">
-        <button
-          onClick={() => setActiveTab('twitter')}
-          className={`flex-1 py-2 rounded-xl font-mono text-xs border transition-all
+        <button onClick={() => setActiveTab('twitter')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl font-mono text-xs border transition-all
             ${activeTab === 'twitter' ? 'bg-[#00e5ff]/10 border-[#00e5ff] text-[#00e5ff]' : 'border-[#1e2535] text-[#6b7494]'}`}>
-          🐦 Twitter
+          <Twitter size={12} /> Twitter
         </button>
-        <button
-          onClick={() => setActiveTab('reddit')}
-          className={`flex-1 py-2 rounded-xl font-mono text-xs border transition-all
+        <button onClick={() => setActiveTab('reddit')}
+          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl font-mono text-xs border transition-all
             ${activeTab === 'reddit' ? 'bg-purple-500/10 border-purple-500 text-purple-400' : 'border-[#1e2535] text-[#6b7494]'}`}>
-          💬 Reddit
+          <MessageSquare size={12} /> Reddit
         </button>
       </div>
 
-      {/* Mobile — single feed with tabs */}
+      {/* Mobile feed */}
       <div className="md:hidden">
         <div className="bg-[#0f1117] border border-[#1e2535] rounded-2xl overflow-hidden">
           <div ref={activeTab === 'twitter' ? tRef : rRef}
-            className="h-64 overflow-y-auto p-3 flex flex-col gap-2">
+               className="h-64 overflow-y-auto p-3 flex flex-col gap-2">
             {(activeTab === 'twitter' ? twitterFeed : redditFeed)
               .filter(p => p && p.sentiment)
               .map((p, i) => <Post key={i} post={p} />)
@@ -124,15 +124,15 @@ export default function SimulationStep({ onNext }) {
         </div>
       </div>
 
-      {/* Desktop — side by side feeds */}
+      {/* Desktop feeds */}
       <div className="hidden md:grid grid-cols-2 gap-4">
         {[
-          { label: '🐦 Twitter Feed', feed: twitterFeed, ref: tRef },
-          { label: '💬 Reddit Feed', feed: redditFeed, ref: rRef },
-        ].map(({ label, feed, ref }) => (
+          { label:'Twitter Feed', icon:<Twitter size={14} />,        feed:twitterFeed, ref:tRef  },
+          { label:'Reddit Feed',  icon:<MessageSquare size={14} />,  feed:redditFeed,  ref:rRef  },
+        ].map(({ label, icon, feed, ref }) => (
           <div key={label} className="bg-[#0f1117] border border-[#1e2535] rounded-2xl overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3 border-b border-[#1e2535] font-mono text-xs">
-              <span>{label}</span>
+              <span className="flex items-center gap-2">{icon}{label}</span>
               <div className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse2" />
             </div>
             <div ref={ref} className="h-80 overflow-y-auto p-3.5 flex flex-col gap-2.5">

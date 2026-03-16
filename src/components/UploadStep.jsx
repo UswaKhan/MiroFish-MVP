@@ -1,4 +1,5 @@
-import React, { useState, useRef} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Zap, FileText, Paperclip } from 'lucide-react';
 
 const LOGS = [
   "📥 Document received — beginning analysis…",
@@ -17,7 +18,6 @@ export default function UploadStep({ onComplete, fileName, setFileName, complete
   const [status, setStatus]     = useState('');
   const fileRef = useRef();
 
-  // if already completed before, re-enable start immediately
   const canStart = fileName.trim().length > 0;
 
   const handleFile = (file) => {
@@ -32,16 +32,10 @@ export default function UploadStep({ onComplete, fileName, setFileName, complete
   };
 
   const startProcessing = () => {
-    // if already completed, just go straight to next step
-    if (completed) {
-      onComplete();
-      return;
-    }
-
+    if (completed) { onComplete(); return; }
     setLoading(true);
     setLogs([]);
     setProgress(0);
-
     let i = 0;
     const tick = () => {
       const pct = Math.round(((i + 1) / LOGS.length) * 100);
@@ -50,10 +44,7 @@ export default function UploadStep({ onComplete, fileName, setFileName, complete
       setLogs(prev => [...prev, LOGS[i]]);
       i++;
       if (i < LOGS.length) setTimeout(tick, 750);
-      else {
-        setCompleted(true);
-        setTimeout(onComplete, 700);
-      }
+      else { setCompleted(true); setTimeout(onComplete, 700); }
     };
     setTimeout(tick, 300);
   };
@@ -62,8 +53,9 @@ export default function UploadStep({ onComplete, fileName, setFileName, complete
     <div className="relative z-10 min-h-[calc(100vh-65px)] flex flex-col items-center justify-center px-6 py-16 text-center">
 
       {/* Eyebrow */}
-      <div className="font-mono text-[11px] tracking-[3px] uppercase text-[#00e5ff] border border-[#00e5ff]/20 bg-[#00e5ff]/5 px-4 py-1.5 rounded-full mb-6">
-        ⚡ Swarm Intelligence Engine
+      <div className="flex items-center gap-2 font-mono text-[11px] tracking-[3px] uppercase text-[#00e5ff] border border-[#00e5ff]/20 bg-[#00e5ff]/5 px-4 py-1.5 rounded-full mb-6">
+        <Zap size={12} />
+        Swarm Intelligence Engine
       </div>
 
       {/* Headline */}
@@ -90,16 +82,18 @@ export default function UploadStep({ onComplete, fileName, setFileName, complete
       >
         <input ref={fileRef} type="file" accept=".txt,.pdf,.md,.docx" className="hidden"
                onChange={(e) => handleFile(e.target.files[0])} />
-        <div className="text-4xl mb-4">📄</div>
+        <div className="flex justify-center mb-4">
+          <FileText size={40} color="#6b7494" />
+        </div>
         <p className="text-base font-semibold text-[#e8eaf0] mb-1">Drop your document here</p>
         <p className="text-sm text-[#6b7494]">or click to browse</p>
         <p className="text-xs text-[#6b7494] mt-2">Supports .txt · .pdf · .md · .docx</p>
       </div>
 
-      {/* Show chosen file if any */}
+      {/* Chosen file */}
       {fileName && (
         <div className="flex items-center gap-2 w-full max-w-xl mt-4 bg-[#00e5ff]/10 border border-[#00e5ff]/20 rounded-xl px-5 py-3 font-mono text-sm text-[#00e5ff]">
-          <span>📎</span>
+          <Paperclip size={14} />
           <span>{fileName}</span>
         </div>
       )}
@@ -122,13 +116,14 @@ export default function UploadStep({ onComplete, fileName, setFileName, complete
         disabled={!canStart || loading}
         className="mt-6 flex items-center gap-2 px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 hover:-translate-y-0.5"
       >
-        {loading && (
-          <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin2 inline-block" />
-        )}
-        {loading ? 'Processing…' : completed ? '⚡ Continue Simulation' : '⚡ Start Simulation'}
+        {loading
+          ? <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin2 inline-block" />
+          : <Zap size={14} />
+        }
+        {loading ? 'Processing…' : completed ? 'Continue Simulation' : 'Start Simulation'}
       </button>
 
-      {/* Progress — only show while loading */}
+      {/* Progress */}
       {loading && (
         <div className="w-full max-w-xl mt-7 bg-[#0f1117] border border-[#1e2535] rounded-xl p-5 animate-fadeIn">
           <div className="flex justify-between font-mono text-xs text-[#6b7494] mb-2.5">
@@ -149,13 +144,12 @@ export default function UploadStep({ onComplete, fileName, setFileName, complete
         </div>
       )}
 
-      {/* If already completed, show a completed note */}
+      {/* Already completed note */}
       {completed && !loading && (
         <p className="mt-4 font-mono text-xs text-[#10b981]">
           ✓ Document already processed — click Continue to go back to your simulation
         </p>
       )}
-
     </div>
   );
 }

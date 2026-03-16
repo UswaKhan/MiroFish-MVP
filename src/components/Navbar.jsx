@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Fish, Check, Menu, X } from 'lucide-react';
 
 const STEPS = ['Upload', 'Graph', 'Agents', 'Simulate', 'Report', 'Chat'];
 
@@ -13,14 +14,14 @@ export default function Navbar({ currentStep, onStepClick }) {
 
         {/* Logo */}
         <div className="flex items-center gap-2 font-mono font-bold text-[#00e5ff] text-lg">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center"
                style={{ background: 'linear-gradient(135deg, #00e5ff, #7c3aed)' }}>
-            🐟
+            <Fish size={16} color="#000" />
           </div>
           MiroFish
         </div>
 
-        {/* Desktop step tabs — hidden on mobile */}
+        {/* Desktop step tabs */}
         <div className="hidden md:flex gap-1">
           {STEPS.map((label, i) => {
             const isDone      = i < currentStep;
@@ -40,7 +41,7 @@ export default function Navbar({ currentStep, onStepClick }) {
                 `}
               >
                 <span className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-current text-[9px] mr-1">
-                  {isDone ? '✓' : i}
+                  {isDone ? <Check size={8} /> : i}
                 </span>
                 {label}
               </button>
@@ -48,16 +49,16 @@ export default function Navbar({ currentStep, onStepClick }) {
           })}
         </div>
 
-        {/* Mobile hamburger button */}
+        {/* Mobile hamburger */}
         <button
           className="md:hidden text-[#6b7494] hover:text-[#e8eaf0] transition-colors"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? '✕' : '☰'}
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile dropdown menu */}
+      {/* Mobile dropdown */}
       {menuOpen && (
         <div className="md:hidden border-t border-[#1e2535] px-5 py-3 flex flex-col gap-2">
           {STEPS.map((label, i) => {
@@ -78,7 +79,7 @@ export default function Navbar({ currentStep, onStepClick }) {
                 `}
               >
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-current text-[9px] mr-2">
-                  {isDone ? '✓' : i}
+                  {isDone ? <Check size={8} /> : i}
                 </span>
                 {label}
               </button>
