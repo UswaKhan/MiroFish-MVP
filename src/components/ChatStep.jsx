@@ -1,7 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AGENTS, AGENT_RESPONSES } from '../data';
 
 const REPORT_AGENT = { name:'ReportAgent', role:'AI Analyst · Always available', emoji:'R', isReport:true };
+const ALL_AGENTS = [REPORT_AGENT, ...AGENTS.slice(0, 8)];
+
+function getGreeting(agent) {
+  return agent.isReport
+    ? "Hello! I'm the ReportAgent. I've analyzed all 40 simulation rounds. What would you like to explore?"
+    : `Hi. I'm ${agent.name}. In the simulation I felt ${agent.sentiment} about the topic. What would you like to know?`;
+}
+
+function Avatar({ agent, size = 'md' }) {
+  const s = size === 'sm' ? 'w-8 h-8 text-xs' : 'w-9 h-9 text-sm';
+  return (
+    <div
+      className={`${s} rounded-full flex-shrink-0 flex items-center justify-center font-extrabold text-white`}
+      style={{ background: agent.isReport ? 'linear-gradient(135deg,#00e5ff,#7c3aed)' : 'linear-gradient(135deg,#7c3aed,#00e5ff)' }}
+    >
+      {agent.emoji}
+    </div>
+  );
+}
 
 function Message({ msg }) {
   const isUser = msg.role === 'user';
@@ -18,25 +37,19 @@ function Message({ msg }) {
   );
 }
 
-function Avatar({ agent, size = 'md' }) {
-  const s = size === 'sm' ? 'w-8 h-8 text-xs' : 'w-9 h-9 text-sm';
+function AgentList({ selected, onSelect }) {
   return (
-    <div className={`${s} rounded-full flex-shrink-0 flex items-center justify-center font-extrabold text-white`}
-         style={{ background: agent.isReport ? 'linear-gradient(135deg,#00e5ff,#7c3aed)' : 'linear-gradient(135deg,#7c3aed,#00e5ff)' }}>
-      {agent.emoji}
-    </div>
-  );
-}
-
-function AgentListItems({ allAgents, selected, onSelect }) {
-  return (
-    <>
-      {allAgents.map(agent => (
-        <div key={agent.name} onClick={() => onSelect(agent)}
+    <div>
+      {ALL_AGENTS.map(agent => (
+        <div
+          key={agent.name}
+          onClick={() => onSelect(agent)}
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all mb-1 border
             ${selected.name === agent.name
               ? 'bg-[#00e5ff]/10 border-[#00e5ff]/20'
-              : 'border-transparent hover:bg-[#161a24]'}`}>
+              : 'border-transparent hover:bg-[#161a24]'
+            }`}
+        >
           <Avatar agent={agent} size="sm" />
           <div>
             <div className="text-sm font-semibold text-[#e8eaf0]">{agent.name}</div>
@@ -46,94 +59,67 @@ function AgentListItems({ allAgents, selected, onSelect }) {
           </div>
         </div>
       ))}
-    </>
-  );
-}
-
-function ChatBox({ selected, history, input, setInput, sendMsg, msgsRef }) {
-  return (
-    <div className="flex flex-col bg-[#0f1117] border border-[#1e2535] rounded-2xl overflow-hidden h-full">
-
-      {/* Chat header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-[#1e2535]">
-        <Avatar agent={selected} />
-        <div>
-          <div className="font-bold text-sm text-[#e8eaf0]">{selected.name}</div>
-          <div className="text-[11px] text-[#6b7494]">
-            {selected.role || `${selected.tags?.[0]} · ${selected.platform}`}
-          </div>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div ref={msgsRef} className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 min-h-0">
-        {history.map((msg, i) => <Message key={i} msg={msg} />)}
-      </div>
-
-      {/* Input */}
-      <div className="flex gap-2 p-3 border-t border-[#1e2535]">
-        <input
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && sendMsg()}
-          placeholder="Ask a question…"
-          className="flex-1 bg-[#161a24] border border-[#1e2535] rounded-xl px-3 py-2.5 text-[#e8eaf0] text-sm outline-none focus:border-[#00e5ff] transition-colors min-w-0"
-          style={{ fontFamily:'Syne,sans-serif' }}
-        />
-        <button
-          onClick={sendMsg}
-          className="px-4 py-2.5 bg-[#00e5ff] text-black font-mono font-bold text-xs rounded-xl hover:brightness-110 transition-all flex-shrink-0">
-          Send
-        </button>
-      </div>
     </div>
   );
 }
 
 export default function ChatStep() {
   const [selected, setSelected]     = useState(REPORT_AGENT);
-  const [histories, setHistories]   = useState({});
+  const [histories, setHistories]   = useState({
+    ReportAgent: [{ role:'agent', text: getGreeting(REPORT_AGENT) }]
+  });
   const [input, setInput]           = useState('');
   const [showAgents, setShowAgents] = useState(false);
   const msgsRef = useRef();
 
-  const allAgents = [REPORT_AGENT, ...AGENTS.slice(0, 8)];
+  const currentHistory = histories[selected.name] || [{ role:'agent', text: getGreeting(selected) }];
 
-  const getGreeting = (agent) => agent.isReport
-    ? "Hello! I'm the ReportAgent. I've analyzed all 40 simulation rounds. What would you like to explore?"
-    : `Hi. I'm ${agent.name}. In the simulation I felt ${agent.sentiment} about the topic. What would you like to know?`;
-
-  const getHistory = (agent) =>
-    histories[agent.name] || [{ role:'agent', text: getGreeting(agent) }];
-
-  const selectAgent = (agent) => {
-    if (!histories[agent.name]) {
-      setHistories(h => ({ ...h, [agent.name]: [{ role:'agent', text: getGreeting(agent) }] }));
+  // scroll to bottom when messages change
+  useEffect(() => {
+    if (msgsRef.current) {
+      msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
     }
+  }, [currentHistory]);
+
+  const selectAgent = useCallback((agent) => {
+    setHistories(h => {
+      if (!h[agent.name]) {
+        return { ...h, [agent.name]: [{ role:'agent', text: getGreeting(agent) }] };
+      }
+      return h;
+    });
     setSelected(agent);
     setShowAgents(false);
-  };
+  }, []);
 
-  useEffect(() => {
-    if (msgsRef.current) msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
-  }, [selected, histories]);
+  const sendMsg = useCallback(() => {
+    setInput(prev => {
+      const text = prev.trim();
+      if (!text) return prev;
 
-  const sendMsg = () => {
-    const text = input.trim();
-    if (!text) return;
-    setInput('');
-    const existing = getHistory(selected);
-    const withUser = [...existing, { role:'user', text }];
-    setHistories(h => ({ ...h, [selected.name]: withUser }));
-    setTimeout(() => {
-      const pool = selected.isReport ? AGENT_RESPONSES.ReportAgent : AGENT_RESPONSES.default;
-      const reply = pool[Math.floor(Math.random() * pool.length)];
-      setHistories(h => ({
-        ...h,
-        [selected.name]: [...(h[selected.name] || withUser), { role:'agent', text: reply }]
-      }));
-    }, 700 + Math.random() * 600);
-  };
+      setHistories(h => {
+        const existing = h[selected.name] || [{ role:'agent', text: getGreeting(selected) }];
+        const withUser = [...existing, { role:'user', text }];
+
+        setTimeout(() => {
+          const pool = selected.isReport ? AGENT_RESPONSES.ReportAgent : AGENT_RESPONSES.default;
+          const reply = pool[Math.floor(Math.random() * pool.length)];
+          setHistories(h2 => ({
+            ...h2,
+            [selected.name]: [...(h2[selected.name] || withUser), { role:'agent', text: reply }]
+          }));
+        }, 700 + Math.random() * 600);
+
+        return { ...h, [selected.name]: withUser };
+      });
+
+      return '';
+    });
+  }, [selected]);
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Enter') sendMsg();
+  }, [sendMsg]);
 
   return (
     <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-10 py-8">
@@ -155,9 +141,9 @@ export default function ChatStep() {
       {/* ── MOBILE LAYOUT ── */}
       <div className="flex flex-col gap-3 md:hidden">
 
-        {/* Agent picker button */}
+        {/* Agent picker */}
         <button
-          onClick={() => setShowAgents(!showAgents)}
+          onClick={() => setShowAgents(v => !v)}
           className="flex items-center gap-3 w-full px-4 py-3 bg-[#0f1117] border border-[#1e2535] rounded-xl"
         >
           <Avatar agent={selected} size="sm" />
@@ -168,27 +154,43 @@ export default function ChatStep() {
           <span className="text-[#6b7494] text-xs">{showAgents ? '▲' : '▼'}</span>
         </button>
 
-        {/* Dropdown agent list */}
+        {/* Dropdown */}
         {showAgents && (
-          <div className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-2 animate-fadeIn">
-            <AgentListItems
-              allAgents={allAgents}
-              selected={selected}
-              onSelect={selectAgent}
-            />
+          <div className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-2">
+            <AgentList selected={selected} onSelect={selectAgent} />
           </div>
         )}
 
-        {/* Chat box */}
-        <div style={{ height: '65vh' }}>
-          <ChatBox
-            selected={selected}
-            history={getHistory(selected)}
-            input={input}
-            setInput={setInput}
-            sendMsg={sendMsg}
-            msgsRef={msgsRef}
-          />
+        {/* Chat */}
+        <div className="flex flex-col bg-[#0f1117] border border-[#1e2535] rounded-2xl overflow-hidden"
+             style={{ height:'65vh' }}>
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-[#1e2535]">
+            <Avatar agent={selected} />
+            <div>
+              <div className="font-bold text-sm text-[#e8eaf0]">{selected.name}</div>
+              <div className="text-[11px] text-[#6b7494]">
+                {selected.role || `${selected.tags?.[0]} · ${selected.platform}`}
+              </div>
+            </div>
+          </div>
+          <div ref={msgsRef} className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 min-h-0">
+            {currentHistory.map((msg, i) => <Message key={i} msg={msg} />)}
+          </div>
+          <div className="flex gap-2 p-3 border-t border-[#1e2535]">
+            <input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask a question…"
+              className="flex-1 bg-[#161a24] border border-[#1e2535] rounded-xl px-3 py-2.5 text-[#e8eaf0] text-sm outline-none focus:border-[#00e5ff] transition-colors min-w-0"
+              style={{ fontFamily:'Syne,sans-serif' }}
+            />
+            <button
+              onClick={sendMsg}
+              className="px-4 py-2.5 bg-[#00e5ff] text-black font-mono font-bold text-xs rounded-xl hover:brightness-110 transition-all flex-shrink-0">
+              Send
+            </button>
+          </div>
         </div>
       </div>
 
@@ -196,22 +198,41 @@ export default function ChatStep() {
       <div className="hidden md:grid gap-5"
            style={{ gridTemplateColumns:'240px 1fr', height:'calc(100vh - 280px)', minHeight:500 }}>
 
+        {/* Agent list */}
         <div className="overflow-y-auto bg-[#0f1117] border border-[#1e2535] rounded-2xl p-2">
-          <AgentListItems
-            allAgents={allAgents}
-            selected={selected}
-            onSelect={selectAgent}
-          />
+          <AgentList selected={selected} onSelect={selectAgent} />
         </div>
 
-        <ChatBox
-          selected={selected}
-          history={getHistory(selected)}
-          input={input}
-          setInput={setInput}
-          sendMsg={sendMsg}
-          msgsRef={msgsRef}
-        />
+        {/* Chat panel */}
+        <div className="flex flex-col bg-[#0f1117] border border-[#1e2535] rounded-2xl overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-[#1e2535]">
+            <Avatar agent={selected} />
+            <div>
+              <div className="font-bold text-sm text-[#e8eaf0]">{selected.name}</div>
+              <div className="text-[11px] text-[#6b7494]">
+                {selected.role || `${selected.tags?.[0]} · ${selected.platform}`}
+              </div>
+            </div>
+          </div>
+          <div ref={msgsRef} className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 min-h-0">
+            {currentHistory.map((msg, i) => <Message key={i} msg={msg} />)}
+          </div>
+          <div className="flex gap-2 p-3 border-t border-[#1e2535]">
+            <input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask a question…"
+              className="flex-1 bg-[#161a24] border border-[#1e2535] rounded-xl px-3 py-2.5 text-[#e8eaf0] text-sm outline-none focus:border-[#00e5ff] transition-colors min-w-0"
+              style={{ fontFamily:'Syne,sans-serif' }}
+            />
+            <button
+              onClick={sendMsg}
+              className="px-4 py-2.5 bg-[#00e5ff] text-black font-mono font-bold text-xs rounded-xl hover:brightness-110 transition-all flex-shrink-0">
+              Send
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
