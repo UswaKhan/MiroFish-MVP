@@ -16,7 +16,7 @@ export default function Navbar({ currentStep, onStepClick }) {
         <div className="flex items-center gap-2 font-mono font-bold text-[#00e5ff] text-lg">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center"
                style={{ background: 'linear-gradient(135deg, #00e5ff, #7c3aed)' }}>
-            <Fish size={16} color="#fff" />
+            <Fish size={16} color="#fffff" />
           </div>
           MiroFish
         </div>
