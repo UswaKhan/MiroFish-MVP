@@ -6,33 +6,37 @@ const COLORS = ['#00e5ff', '#7c3aed', '#f59e0b', '#10b981'];
 
 export default function GraphStep({ onNext }) {
   const svgRef = useRef();
+  const containerRef = useRef();
   const [counts, setCounts] = useState({ nodes:0, edges:0, events:0, clusters:0 });
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
-    const W = svgRef.current.clientWidth || 800;
-    const H = 470;
+    const W = containerRef.current?.clientWidth || 320;
+    const H = Math.min(W * 0.85, 400);
+    svgRef.current.setAttribute('height', H);
+
     const nodes = GRAPH_NODES.map(d => ({ ...d }));
     const links = GRAPH_LINKS.map(d => ({ ...d }));
 
     const sim = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(85))
-      .force('charge', d3.forceManyBody().strength(-220))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(W < 400 ? 50 : 85))
+      .force('charge', d3.forceManyBody().strength(W < 400 ? -120 : -220))
       .force('center', d3.forceCenter(W / 2, H / 2))
-      .force('collision', d3.forceCollide(42));
+      .force('collision', d3.forceCollide(W < 400 ? 28 : 42));
 
     const line = svg.append('g').selectAll('line').data(links).join('line')
       .attr('stroke', '#1e2535').attr('stroke-width', 1.5);
 
     const nodeG = svg.append('g').selectAll('g').data(nodes).join('g').attr('cursor', 'pointer');
-    nodeG.append('circle').attr('r', 22)
+    const r = W < 400 ? 16 : 22;
+    nodeG.append('circle').attr('r', r)
       .attr('fill',   d => COLORS[d.group - 1] + '22')
       .attr('stroke', d => COLORS[d.group - 1])
       .attr('stroke-width', 1.5);
     nodeG.append('text').text(d => d.id)
       .attr('text-anchor', 'middle').attr('dy', '0.35em')
-      .attr('font-size', d => d.id.length > 8 ? '8px' : '9.5px')
+      .attr('font-size', W < 400 ? '6px' : d => d.id.length > 8 ? '8px' : '9.5px')
       .attr('fill', '#e8eaf0')
       .attr('font-family', 'Space Mono, monospace')
       .attr('font-weight', '700');
@@ -41,7 +45,7 @@ export default function GraphStep({ onNext }) {
       line.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
           .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
       nodeG.attr('transform', d =>
-        `translate(${Math.max(30,Math.min(W-30,d.x))},${Math.max(30,Math.min(H-30,d.y))})`
+        `translate(${Math.max(r+2,Math.min(W-r-2,d.x))},${Math.max(r+2,Math.min(H-r-2,d.y))})`
       );
     });
 
@@ -57,15 +61,16 @@ export default function GraphStep({ onNext }) {
 
   return (
     <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-10 py-8">
-      <div className="mb-6">
+      <div className="mb-5">
         <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">Step 01 — Knowledge Graph</span>
         <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>Entity Graph Built</h2>
         <p className="text-[#6b7494] text-sm">Extracted ontology and relationships from your document.</p>
       </div>
 
-      <svg ref={svgRef} className="w-full rounded-2xl border border-[#1e2535] bg-[#0f1117]" style={{ height: 320 }} />
+      <div ref={containerRef} className="w-full">
+        <svg ref={svgRef} className="w-full rounded-2xl border border-[#1e2535] bg-[#0f1117]" />
+      </div>
 
-      {/* 2 cols on mobile, 4 on desktop */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
         {[{k:'nodes',l:'Entities'},{k:'edges',l:'Relationships'},{k:'events',l:'Events'},{k:'clusters',l:'Clusters'}].map(s => (
           <div key={s.k} className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-4 text-center">
@@ -75,8 +80,9 @@ export default function GraphStep({ onNext }) {
         ))}
       </div>
 
-      <div className="mt-6 text-right">
-        <button onClick={onNext} className="w-full md:w-auto px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
+      <div className="mt-6">
+        <button onClick={onNext}
+          className="w-full px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
           Continue → Agent Setup
         </button>
       </div>
