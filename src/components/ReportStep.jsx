@@ -4,23 +4,23 @@ import { REPORT_SECTIONS } from '../data';
 function Section({ s, i }) {
   return (
     <div className="bg-[#0f1117] border border-[#1e2535] rounded-2xl p-5 md:p-7 opacity-0"
-         style={{ animation: `fadeIn 0.5s ease ${i * 0.13}s forwards` }}>
+      style={{ animation: `fadeIn 0.5s ease ${i * 0.13}s forwards` }}>
       <h3 className="font-extrabold text-base md:text-lg mb-4 pb-3 border-b border-[#1e2535]"
-          style={{fontFamily:'Syne,sans-serif'}}>{s.title}</h3>
+        style={{ fontFamily: 'Syne,sans-serif' }}>{s.title}</h3>
       {s.paragraphs.map((p, j) => (
         <p key={j} className="text-[#6b7494] text-sm leading-relaxed mb-3">{p}</p>
       ))}
       {s.showSentiment && (
         <div className="my-4">
           <div className="flex h-2.5 rounded-full overflow-hidden mb-3">
-            <div className="bg-[#10b981]" style={{width:'48%'}} />
-            <div className="bg-amber-400" style={{width:'31%'}} />
-            <div className="bg-[#ef4444]" style={{width:'21%'}} />
+            <div className="bg-[#10b981]" style={{ width: '48%' }} />
+            <div className="bg-amber-400" style={{ width: '31%' }} />
+            <div className="bg-[#ef4444]" style={{ width: '21%' }} />
           </div>
           <div className="flex gap-3 font-mono text-xs text-[#6b7494] flex-wrap">
-            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#10b981] inline-block"/>Positive 48%</span>
-            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block"/>Neutral 31%</span>
-            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#ef4444] inline-block"/>Negative 21%</span>
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#10b981] inline-block" />Positive 48%</span>
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />Neutral 31%</span>
+            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#ef4444] inline-block" />Negative 21%</span>
           </div>
         </div>
       )}
@@ -59,7 +59,7 @@ export default function ReportStep({ onNext }) {
         <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">
           Step 04 — Prediction Report
         </span>
-        <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>
+        <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{ fontFamily: 'Syne,sans-serif' }}>
           Analysis Complete
         </h2>
         <p className="text-[#6b7494] text-sm mb-4">ReportAgent synthesized all simulation data into a structured prediction.</p>
@@ -74,7 +74,7 @@ export default function ReportStep({ onNext }) {
         <div className="sticky top-24 self-start">
           {REPORT_SECTIONS.map((s, i) => (
             <div key={i}
-              onClick={() => { setActiveIdx(i); document.querySelectorAll('.report-sec')[i]?.scrollIntoView({behavior:'smooth'}); }}
+              onClick={() => { setActiveIdx(i); document.querySelectorAll('.report-sec')[i]?.scrollIntoView({ behavior: 'smooth' }); }}
               className={`px-3.5 py-2.5 rounded-lg cursor-pointer text-sm transition-all mb-1 border
                 ${activeIdx === i ? 'bg-[#00e5ff]/8 text-[#00e5ff] border-[#00e5ff]/20' : 'text-[#6b7494] border-transparent hover:text-[#e8eaf0]'}`}>
               {s.title}
@@ -97,9 +97,9 @@ export default function ReportStep({ onNext }) {
         ))}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 flex justify-end">
         <button onClick={onNext}
-          className="w-full px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
+          className="w-full md:w-auto px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
           Continue → Deep Interaction
         </button>
       </div>
