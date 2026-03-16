@@ -1,0 +1,83 @@
+import React, { useState } from 'react';
+import { REPORT_SECTIONS } from '../data';
+
+export default function ReportStep({ onNext }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  const downloadReport = () => {
+    let text = '# MiroFish Prediction Report\n\nGenerated: ' + new Date().toLocaleDateString() + '\n\n---\n\n';
+    REPORT_SECTIONS.forEach(s => {
+      text += `## ${s.title}\n\n`;
+      s.paragraphs.forEach(p => { text += p + '\n\n'; });
+      if (s.highlight) text += `> Key Finding: ${s.highlight}\n\n`;
+      text += '---\n\n';
+    });
+    const blob = new Blob([text], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'mirofish-report.md';
+    a.click();
+  };
+
+  return (
+    <div className="relative z-10 max-w-5xl mx-auto px-10 py-10">
+      <div className="flex items-start justify-between flex-wrap gap-4 mb-8">
+        <div>
+          <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">Step 04 — Prediction Report</span>
+          <h2 className="font-extrabold text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>Analysis Complete</h2>
+          <p className="text-[#6b7494] text-sm">ReportAgent synthesized all simulation data into a structured prediction.</p>
+        </div>
+        <button onClick={downloadReport} className="px-5 py-2.5 border border-[#00e5ff]/30 text-[#00e5ff] font-mono text-sm rounded-xl hover:bg-[#00e5ff]/10 transition-all">
+          ⬇ Download Report
+        </button>
+      </div>
+
+      <div className="grid gap-7" style={{ gridTemplateColumns: '220px 1fr' }}>
+        <div className="sticky top-24 self-start">
+          {REPORT_SECTIONS.map((s, i) => (
+            <div key={i} onClick={() => { setActiveIdx(i); document.querySelectorAll('.report-sec')[i]?.scrollIntoView({behavior:'smooth'}); }}
+              className={`px-3.5 py-2.5 rounded-lg cursor-pointer text-sm transition-all mb-1 border
+                ${activeIdx === i ? 'bg-[#00e5ff]/8 text-[#00e5ff] border-[#00e5ff]/20' : 'text-[#6b7494] border-transparent hover:text-[#e8eaf0]'}`}>
+              {s.title}
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-6">
+          {REPORT_SECTIONS.map((s, i) => (
+            <div key={i} className="report-sec bg-[#0f1117] border border-[#1e2535] rounded-2xl p-7 opacity-0"
+                 style={{ animation: `fadeIn 0.5s ease ${i * 0.13}s forwards` }}>
+              <h3 className="font-extrabold text-lg mb-4 pb-3 border-b border-[#1e2535]" style={{fontFamily:'Syne,sans-serif'}}>{s.title}</h3>
+              {s.paragraphs.map((p, j) => <p key={j} className="text-[#6b7494] text-sm leading-relaxed mb-3">{p}</p>)}
+              {s.showSentiment && (
+                <div className="my-4">
+                  <div className="flex h-2.5 rounded-full overflow-hidden mb-3">
+                    <div className="bg-[#10b981]" style={{width:'48%'}} />
+                    <div className="bg-amber-400" style={{width:'31%'}} />
+                    <div className="bg-[#ef4444]" style={{width:'21%'}} />
+                  </div>
+                  <div className="flex gap-5 font-mono text-xs text-[#6b7494]">
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#10b981] inline-block"/>Positive 48%</span>
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400 inline-block"/>Neutral 31%</span>
+                    <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#ef4444] inline-block"/>Negative 21%</span>
+                  </div>
+                </div>
+              )}
+              {s.highlight && (
+                <div className="mt-3 bg-[#00e5ff]/5 border border-[#00e5ff]/15 border-l-2 border-l-[#00e5ff] rounded-r-xl p-4 text-sm leading-relaxed text-[#e8eaf0]">
+                  {s.highlight}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-8 text-right">
+        <button onClick={onNext} className="px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
+          Continue → Deep Interaction
+        </button>
+      </div>
+    </div>
+  );
+}
