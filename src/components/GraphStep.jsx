@@ -26,12 +26,12 @@ export default function GraphStep({ onNext }) {
     const padding = nodeRadius + 10;
 
     const sim = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(isMobile ? 55 : 90))
-      .force('charge', d3.forceManyBody().strength(isMobile ? -150 : -280))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(isMobile ? 60 : 100))
+      .force('charge', d3.forceManyBody().strength(isMobile ? -200 : -350))
       .force('center', d3.forceCenter(W / 2, H / 2))
-      .force('collision', d3.forceCollide(nodeRadius + 8))
-      .force('x', d3.forceX(W / 2).strength(0.05))
-      .force('y', d3.forceY(H / 2).strength(0.05));
+      .force('collision', d3.forceCollide(nodeRadius + 12))
+      .force('x', d3.forceX(W / 2).strength(0.08))
+      .force('y', d3.forceY(H / 2).strength(0.08));
 
     const line = svg.append('g').selectAll('line').data(links).join('line')
       .attr('stroke', '#1e2535').attr('stroke-width', 1.5);
@@ -59,7 +59,6 @@ export default function GraphStep({ onNext }) {
       .attr('pointer-events', 'none');
 
     sim.on('tick', () => {
-      // clamp every node inside the SVG with padding
       nodes.forEach(d => {
         d.x = Math.max(padding, Math.min(W - padding, d.x));
         d.y = Math.max(padding, Math.min(H - padding, d.y));
@@ -74,7 +73,6 @@ export default function GraphStep({ onNext }) {
       nodeG.attr('transform', d => `translate(${d.x},${d.y})`);
     });
 
-    // animate counters
     let n = 0;
     const inc = setInterval(() => {
       n++;
@@ -93,12 +91,13 @@ export default function GraphStep({ onNext }) {
   return (
     <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-10 py-8">
 
+      {/* Header */}
       <div className="mb-5">
         <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">
           Step 01 — Knowledge Graph
         </span>
         <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2"
-            style={{ fontFamily: 'Syne,sans-serif' }}>
+            style={{ fontFamily: 'Syne, sans-serif' }}>
           Entity Graph Built
         </h2>
         <p className="text-[#6b7494] text-sm">
@@ -106,7 +105,7 @@ export default function GraphStep({ onNext }) {
         </p>
       </div>
 
-      {/* Graph container */}
+      {/* Graph */}
       <div ref={containerRef} className="w-full">
         <svg
           ref={svgRef}
@@ -130,13 +129,15 @@ export default function GraphStep({ onNext }) {
         ))}
       </div>
 
-      <div className="mt-6">
+      {/* Button */}
+      <div className="mt-6 flex justify-end">
         <button
           onClick={onNext}
-          className="w-full px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
+          className="w-full md:w-auto px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
           Continue → Agent Setup
         </button>
       </div>
+
     </div>
   );
 }
