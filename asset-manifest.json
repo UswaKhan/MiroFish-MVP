@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/MiroFish-English/static/css/main.72b7cae5.css",
-    "main.js": "/MiroFish-English/static/js/main.02ad9f7e.js",
+    "main.css": "/MiroFish-English/static/css/main.62661885.css",
+    "main.js": "/MiroFish-English/static/js/main.43e06cde.js",
     "static/js/453.15b815b7.chunk.js": "/MiroFish-English/static/js/453.15b815b7.chunk.js",
     "index.html": "/MiroFish-English/index.html",
-    "main.72b7cae5.css.map": "/MiroFish-English/static/css/main.72b7cae5.css.map",
-    "main.02ad9f7e.js.map": "/MiroFish-English/static/js/main.02ad9f7e.js.map",
+    "main.62661885.css.map": "/MiroFish-English/static/css/main.62661885.css.map",
+    "main.43e06cde.js.map": "/MiroFish-English/static/js/main.43e06cde.js.map",
     "453.15b815b7.chunk.js.map": "/MiroFish-English/static/js/453.15b815b7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.72b7cae5.css",
-    "static/js/main.02ad9f7e.js"
+    "static/css/main.62661885.css",
+    "static/js/main.43e06cde.js"
   ]
 }
