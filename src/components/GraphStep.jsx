@@ -56,26 +56,27 @@ export default function GraphStep({ onNext }) {
   }, []);
 
   return (
-    <div className="relative z-10 max-w-5xl mx-auto px-10 py-10">
-      <div className="mb-8">
+    <div className="relative z-10 max-w-5xl mx-auto px-4 md:px-10 py-8">
+      <div className="mb-6">
         <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">Step 01 — Knowledge Graph</span>
-        <h2 className="font-extrabold text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>Entity Graph Built</h2>
+        <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>Entity Graph Built</h2>
         <p className="text-[#6b7494] text-sm">Extracted ontology and relationships from your document.</p>
       </div>
 
-      <svg ref={svgRef} className="w-full rounded-2xl border border-[#1e2535] bg-[#0f1117]" style={{ height: 470 }} />
+      <svg ref={svgRef} className="w-full rounded-2xl border border-[#1e2535] bg-[#0f1117]" style={{ height: 320 }} />
 
-      <div className="grid grid-cols-4 gap-4 mt-5">
+      {/* 2 cols on mobile, 4 on desktop */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
         {[{k:'nodes',l:'Entities'},{k:'edges',l:'Relationships'},{k:'events',l:'Events'},{k:'clusters',l:'Clusters'}].map(s => (
-          <div key={s.k} className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-5 text-center">
-            <div className="font-mono font-extrabold text-3xl text-[#00e5ff]">{counts[s.k]}</div>
+          <div key={s.k} className="bg-[#0f1117] border border-[#1e2535] rounded-xl p-4 text-center">
+            <div className="font-mono font-extrabold text-2xl text-[#00e5ff]">{counts[s.k]}</div>
             <div className="font-mono text-[10px] uppercase tracking-widest text-[#6b7494] mt-1">{s.l}</div>
           </div>
         ))}
       </div>
 
-      <div className="mt-8 text-right">
-        <button onClick={onNext} className="px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
+      <div className="mt-6 text-right">
+        <button onClick={onNext} className="w-full md:w-auto px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
           Continue → Agent Setup
         </button>
       </div>

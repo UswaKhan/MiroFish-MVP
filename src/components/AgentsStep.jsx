@@ -3,20 +3,21 @@ import { AGENTS } from '../data';
 
 export default function AgentsStep({ onNext }) {
   return (
-    <div className="relative z-10 max-w-6xl mx-auto px-10 py-10">
-      <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
+    <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-10 py-8">
+
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
         <div>
           <span className="font-mono text-[11px] uppercase tracking-[2px] text-[#00e5ff] mb-3 block">Step 02 — Agent Profiles</span>
-          <h2 className="font-extrabold text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>120 Agents Generated</h2>
+          <h2 className="font-extrabold text-2xl md:text-3xl tracking-tight mb-2" style={{fontFamily:'Syne,sans-serif'}}>120 Agents Generated</h2>
           <p className="text-[#6b7494] text-sm">Unique agents with independent personalities and behavioral patterns.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <span className="text-[11px] px-3 py-1 rounded-full border border-[#00e5ff]/30 text-[#00e5ff] bg-[#00e5ff]/5 font-mono">🐦 Twitter × 60</span>
           <span className="text-[11px] px-3 py-1 rounded-full border border-purple-500/30 text-purple-400 bg-purple-500/5 font-mono">💬 Reddit × 60</span>
         </div>
       </div>
 
-      <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {AGENTS.map((agent, i) => (
           <div key={agent.id}
             className="bg-[#0f1117] border border-[#1e2535] rounded-2xl p-5 opacity-0 hover:border-[#00e5ff]/30 hover:-translate-y-0.5 transition-all duration-200"
@@ -46,8 +47,8 @@ export default function AgentsStep({ onNext }) {
         ))}
       </div>
 
-      <div className="mt-8 text-right">
-        <button onClick={onNext} className="px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
+      <div className="mt-6 text-right">
+        <button onClick={onNext} className="w-full md:w-auto px-8 py-3.5 bg-[#00e5ff] text-black font-mono font-bold text-sm rounded-xl hover:brightness-110 transition-all">
           Continue → Run Simulation
         </button>
       </div>
