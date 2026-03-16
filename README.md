@@ -73,9 +73,3 @@ src/
 
 - GitHub: [666ghj/MiroFish](https://github.com/666ghj/MiroFish)
 - Original stack: Vue 3, Python/Flask, Zep Cloud, CAMEL-OASIS
-- Stars: 10k+
-
----
-
-## License
-AGPL-3.0 — same as the original MiroFish project.
