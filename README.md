@@ -3,7 +3,7 @@
 > English-localized version of MiroFish: a swarm intelligence engine that simulates thousands of AI agents to predict public opinion and social media reactions.
 
 ## 🌐 Live Demo
-**[https://UswaKhan.github.io/MiroFish-English](https://UswaKhan.github.io/MiroFish-English)**
+**[https://UswaKhan.github.io/MiroFish-MVP](https://UswaKhan.github.io/MiroFish-MVP)**
 
 ---
 
