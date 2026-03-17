@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/MiroFish-English/static/css/main.83081026.css",
-    "main.js": "/MiroFish-English/static/js/main.52067e3a.js",
-    "static/js/453.15b815b7.chunk.js": "/MiroFish-English/static/js/453.15b815b7.chunk.js",
-    "index.html": "/MiroFish-English/index.html",
-    "main.83081026.css.map": "/MiroFish-English/static/css/main.83081026.css.map",
-    "main.52067e3a.js.map": "/MiroFish-English/static/js/main.52067e3a.js.map",
-    "453.15b815b7.chunk.js.map": "/MiroFish-English/static/js/453.15b815b7.chunk.js.map"
+    "main.css": "/MiroFish-MVP/static/css/main.83081026.css",
+    "main.js": "/MiroFish-MVP/static/js/main.6289d988.js",
+    "static/js/453.15b815b7.chunk.js": "/MiroFish-MVP/static/js/453.15b815b7.chunk.js",
+    "index.html": "/MiroFish-MVP/index.html",
+    "main.83081026.css.map": "/MiroFish-MVP/static/css/main.83081026.css.map",
+    "main.6289d988.js.map": "/MiroFish-MVP/static/js/main.6289d988.js.map",
+    "453.15b815b7.chunk.js.map": "/MiroFish-MVP/static/js/453.15b815b7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.83081026.css",
-    "static/js/main.52067e3a.js"
+    "static/js/main.6289d988.js"
   ]
 }
